@@ -30,23 +30,50 @@ public class Main {
             System.out.println("0. Salir");
             System.out.print("Selecciona una opción: ");
             opcion = leerEntero();
-            switch (opcion) {
-                case 1 ->
-                    crearCine();
-                case 2 ->
-                    agregarSala();
-                case 3 ->
-                    agregarPeliculaSala();
-                case 4 ->
-                    agregarSesionPelicula();
-                case 5 ->
-                    verPlanoSala();
-                case 6 ->
-                    comprarEntrada();
-                case 0 ->
-                    System.out.println("Saliendo del programa.");
-                default ->
-                    System.out.println("Opción inválida, intenta de nuevo.");
+            
+            try {
+                switch (opcion) {
+                    case 1 -> crearCine();
+                    case 2 -> {
+                        try {
+                            agregarSala();
+                        } catch (CineException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 3 -> {
+                        try {
+                            agregarPeliculaSala();
+                        } catch (CineException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 4 -> {
+                        try {
+                            agregarSesionPelicula();
+                        } catch (CineException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 5 -> {
+                        try {
+                            verPlanoSala();
+                        } catch (CineException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 6 -> {
+                        try {
+                            comprarEntrada();
+                        } catch (CineException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 0 -> System.out.println("Saliendo del programa.");
+                    default -> System.out.println("Opción inválida, intenta de nuevo.");
+                }
+            } catch (Exception e) {
+                System.out.println("Se ha producido un error inesperado: " + e.getMessage());
             }
         } while (opcion != 0);
     }
@@ -62,10 +89,9 @@ public class Main {
         }
     }
 
-    private static int seleccionarCine() {
+    private static int seleccionarCine() throws CineException {
         if (cines.isEmpty()) {
-            System.out.println("Primero debes crear un cine.");
-            return -1;
+            throw new CineException("No hay cines disponibles. Primero debes crear uno.");
         }
 
         System.out.println("Selecciona el cine:");
@@ -75,12 +101,10 @@ public class Main {
         int id = leerEntero() - 1;
         sc.nextLine();
 
-        if (id >= 0 && id < cines.size()) {
-            return id;
-        } else {
-            System.out.println("Índice de cine no válido.");
-            return -1;
+        if (id < 0 || id >= cines.size()) {
+            throw new CineException("Índice de cine no válido.");
         }
+        return id;
     }
 
     private static void crearCine() {
@@ -116,7 +140,7 @@ public class Main {
         System.out.println("Cine creado con éxito.");
     }
 
-    private static void agregarSala() {
+    private static void agregarSala() throws CineException {
         int idCine = seleccionarCine();
         if (idCine == -1) {
             return;
@@ -151,7 +175,7 @@ public class Main {
         System.out.println("Sala añadida al cine.");
     }
 
-    private static void agregarPeliculaSala() {
+    private static void agregarPeliculaSala() throws CineException {
         int idCine = seleccionarCine();
         if (idCine == -1) {
             return;
@@ -213,7 +237,7 @@ public class Main {
         }
     }
 
-    private static void agregarSesionPelicula() {
+    private static void agregarSesionPelicula() throws CineException {
         int idCine = seleccionarCine();
         if (idCine == -1) {
             return;
@@ -292,7 +316,7 @@ public class Main {
         }
     }
 
-    private static void verPlanoSala() {
+    private static void verPlanoSala() throws CineException {
         int idCine = seleccionarCine();
         if (idCine == -1) {
             return;
@@ -378,7 +402,7 @@ public class Main {
         }
     }
 
-    private static void comprarEntrada() {
+    private static void comprarEntrada() throws CineException {
         int idCine = seleccionarCine();
         if (idCine == -1) {
             return;
